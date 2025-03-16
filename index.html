@@ -10,28 +10,191 @@
 
 <script>
   window.onload = function() {
+    // Check saved language preference
+    let currentLanguage = localStorage.getItem('language') || 'pt';
+    
+    // Apply saved theme preference
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('theme-toggle').checked = true;
+    }
+    
+    // Age verification with language support
     if (!sessionStorage.getItem('is18OrOlder')) {
+      // Set content based on language
+      let title = currentLanguage === 'pt' ? 'Confirmar a idade' : 'Age Verification';
+      let text = currentLanguage === 'pt' 
+                ? "Tem idade legal para consumo de bebidas alcoólicas?" 
+                : "Are you of legal age to consume alcoholic beverages?";
+      let confirmBtn = currentLanguage === 'pt' ? 'Sim' : 'Yes';
+      let cancelBtn = currentLanguage === 'pt' ? 'Não' : 'No';
+      
       Swal.fire({
-        title: 'Confirmar a idade',
-		imageUrl: 'images/notaslogosmall.jpg',
-
-        text: "Tem idade legal para consumo de bebidas alcoólicas?",
-
+        title: title,
+        imageUrl: 'images/notaslogosmall.jpg',
+        text: text,
         showCancelButton: true,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Nao',
-        }).then((result) => {
-          if (result.value) {
-            sessionStorage.setItem('is18OrOlder', true);
-            // The user is 18 or older, continue to the website
-          } else {
-            // The user is not 18 or older, redirect to another website
-            window.location.href = "http://google.com";
-          }
-        });
+        confirmButtonText: confirmBtn,
+        cancelButtonText: cancelBtn,
+      }).then((result) => {
+        if (result.value) {
+          sessionStorage.setItem('is18OrOlder', true);
+          // The user is 18 or older, continue to the website
+        } else {
+          // The user is not 18 or older, redirect to another website
+          window.location.href = "http://google.com";
+        }
+      });
+    }
+    
+    // Apply saved language preference
+    if (currentLanguage) {
+      switchLanguage(currentLanguage);
     }
   };
 </script>
+
+<style>
+/* Dark mode styles for home section */
+.dark-mode #home h1,
+.dark-mode #home p,
+.dark-mode #home h6 {
+  color: #000000 !important; /* dark mode */
+}
+
+/* You might also need to adjust the button */
+.dark-mode #home .btn {
+  color: #f0f0f0;
+  border-color: #000000;
+}
+
+/* This targets the "Descubra os nossos vinhos" button specifically */
+.dark-mode .hvr-bounce-to-top {
+  color: #000000 !important;
+}
+
+.dark-mode .hvr-bounce-to-top:before {
+  background: #f0f0f0 !important;
+}
+
+.dark-mode .hvr-bounce-to-top:hover,
+.dark-mode .hvr-bounce-to-top:focus,
+.dark-mode .hvr-bounce-to-top:active {
+  color: #121212 !important;
+}
+
+  /* Dark mode styles */
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+  
+  .dark-mode .navbar {
+    background-color: #1e1e1e !important;
+  }
+  
+  .dark-mode .navbar-default .navbar-nav > li > a {
+    color: #f0f0f0;
+  }
+  
+  .dark-mode .navbar-default .navbar-brand {
+    color: #f0f0f0;
+  }
+  
+  .dark-mode #about, .dark-mode #menu, .dark-mode #gallery {
+    background-color: #121212;
+    color: #f0f0f0;
+  }
+  
+  .dark-mode .section-title h2,
+  .dark-mode .section-title h4,
+  .dark-mode .media-heading {
+    color: #f0f0f0;
+  }
+  
+  /* Theme toggle styles */
+  .theme-toggle-container {
+    position: fixed;
+    top: 85px;
+    right: 20px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+  }
+  
+  .theme-toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    margin-right: 10px;
+  }
+  
+  .theme-toggle-label input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #1e1e1e;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(24px);
+  }
+  
+  /* Language toggle styles */
+  .language-toggle {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .language-btn {
+    width: 30px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .language-icon {
+    font-size: 12px;
+    margin-right: 5px;
+    color: #555;
+  }
+  
+  .dark-mode .language-icon {
+    color: #f0f0f0;
+  }
+  
+</style>
 
 	
   	<meta charset="utf-8">
@@ -62,6 +225,18 @@
 </head>
 <body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
 
+<!-- Theme toggle container -->
+<div class="theme-toggle-container">
+  <label class="theme-toggle-label">
+    <input type="checkbox" id="theme-toggle">
+    <span class="slider"></span>
+  </label>
+  <div class="language-toggle">
+    <img src="images/pt.png" class="language-btn" id="pt-btn" alt="Portuguese">
+    <img src="images/en.png" class="language-btn" id="en-btn" alt="English">
+  </div>
+</div>
+
 <!-- Preloader section -->
 <div class="preloader">
 	<div class="sk-spinner sk-spinner-pulse"></div>
@@ -75,10 +250,14 @@
       <div class="row">
 
           <div class="col-md-offset-2 col-md-8 col-sm-12">
-              <h1 class="wow fadeInUp" data-wow-delay="0.6s">Notas da vinha</h1>
-              <p class="wow fadeInUp" data-wow-delay="1.0s">Vinhos produzidos e engarrafados na Quinta da Lapa.</p>
-              <h6 class="wow fadeInUp" data-wow-delay="1.4s"> Bairros, Castelo de Paiva </h6>
-              <a href="#about" class="wow fadeInUp btn btn-default hvr-bounce-to-top smoothScroll" data-wow-delay="1.3s">Descubra os nossos vinhos</a>
+              <h1 class="wow fadeInUp" data-wow-delay="0.6s" data-lang="pt">Notas da vinha</h1>
+              <h1 class="wow fadeInUp" data-wow-delay="0.6s" data-lang="en" style="display:none;">Notas da vinha</h1>
+              <p class="wow fadeInUp" data-wow-delay="1.0s" data-lang="pt">Vinhos produzidos e engarrafados na Quinta da Lapa.</p>
+              <p class="wow fadeInUp" data-wow-delay="1.0s" data-lang="en" style="display:none;">Wines produced and bottled at Quinta da Lapa.</p>
+              <h6 class="wow fadeInUp" data-wow-delay="1.4s" data-lang="pt"> Bairros, Castelo de Paiva </h6>
+              <h6 class="wow fadeInUp" data-wow-delay="1.4s" data-lang="en" style="display:none;"> Bairros, Castelo de Paiva </h6>
+              <a href="#about" class="wow fadeInUp btn btn-default hvr-bounce-to-top smoothScroll" data-wow-delay="1.3s" data-lang="pt">Descubra os nossos vinhos</a>
+              <a href="#about" class="wow fadeInUp btn btn-default hvr-bounce-to-top smoothScroll" data-wow-delay="1.3s" data-lang="en" style="display:none;">Discover our wines</a>
           </div>
 
       </div>
@@ -100,21 +279,12 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
-	  <!-- neolite edit remover topo
-        <li><a href="#top" class="smoothScroll">Inicio</a></li>
-		-->
-		<!-- Remover o feature 
-        <li><a href="#feature" class="smoothScroll">Inicio</a></li>
-		-->
-        <li><a href="#about" class="smoothScroll">Sobre Nós</a></li>
-        <li><a href="#menu" class="smoothScroll">Vinhos</a></li>
-		<!-- neolite edit remover team
-        <li><a href="#team" class="smoothScroll">Team</a></li>
-		-->
-        <li><a href="#gallery" class="smoothScroll">Contactos</a></li>
-		<!-- neolite edit remover team
-        <li><a href="#contactos" class="smoothScroll">Contactos</a></li>
-		-->
+        <li><a href="#about" class="smoothScroll" data-lang="pt">Sobre Nós</a></li>
+        <li><a href="#about" class="smoothScroll" data-lang="en" style="display:none;">About Us</a></li>
+        <li><a href="#menu" class="smoothScroll" data-lang="pt">Vinhos</a></li>
+        <li><a href="#menu" class="smoothScroll" data-lang="en" style="display:none;">Wines</a></li>
+        <li><a href="#gallery" class="smoothScroll" data-lang="pt">Contactos</a></li>
+        <li><a href="#gallery" class="smoothScroll" data-lang="en" style="display:none;">Contacts</a></li>
       </ul>
     </div>
 
@@ -129,8 +299,10 @@
 
       <div class="col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
           <div class="wow fadeInUp section-title" data-wow-delay="0.3s">
-            <h2>Quinta da Lapa</h2>
-            <h4>Vinhos Verdes Sub-Região de Paiva</h4>
+            <h2 data-lang="pt">Quinta da Lapa</h2>
+            <h2 data-lang="en" style="display:none;">Quinta da Lapa</h2>
+            <h4 data-lang="pt">Vinhos Verdes Sub-Região de Paiva</h4>
+            <h4 data-lang="en" style="display:none;">Green Wines Sub-Region of Paiva</h4>
           </div>
       </div>
 
@@ -138,9 +310,6 @@
       
       <div class="wow fadeInUp col-md-3 col-sm-5" data-wow-delay="0.3s">
         <img src="images/about-img.jpg" class="img-responsive" alt="About">
-		<!-- tirar o texto
-        <h3>Nunc ullamcorper suscipit neque, ac malesuada purus molestie non.</h3>
-		-->
       </div>
 
       <div class="wow fadeInUp col-md-5 col-sm-7" data-wow-delay="0.5s">
@@ -161,30 +330,19 @@
 
           </ul>
         </div>
-<!-- tirar o texto
-         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt. Lorem ipsum dolor sit amet.</p>
--->    
-	</div>
+    </div>
 
        <div class="wow fadeInUp col-md-4 col-sm-12" data-wow-delay="0.9s">
-	   <!-- Tirar titulo
-        	<h2>Fine Dining</h2>
-			-->
-         	<p><h5>Situada na encosta do Rio Paiva em Bairros, Castelo de Paiva, em plena Região Demarcada dos
+         	<h5 data-lang="pt">Situada na encosta do Rio Paiva em Bairros, Castelo de Paiva, em plena Região Demarcada dos
 Vinhos Verdes, mais concretamente na Sub-região de Paiva, onde produzimos vinhos tinto e
 branco, que refletem o nosso compromisso com a qualidade desde o cultivo das nossas vinhas
 até o processo de vinificação. Combinando tradição e modernidade para produzir vinhos de
-caráter e distinção, recorrendo às mais modernas técnicas de vinificação. </h5></p>
-         	<p><h5>Valorizamos a sustentabilidade e a preservação do meio ambiente, utilizando práticas agrícolas
-responsáveis que garantem a saúde do solo e das vinhas.</h5></p>
-         	<p><h5>Os vinhos da Quinta da Lapa são comercializados com a marca "Notas da Vinha".</h5></p>
-			<!-- Tirar extra pontos
-            <ul>
-                <li>Donec fringilla ipsum</li>
-                <li>Integer nec urna</li>
-                <li>Curabitur porta</li>
-         	</ul>
-			-->
+caráter e distinção, recorrendo às mais modernas técnicas de vinificação. </h5>
+         	<h5 data-lang="en" style="display:none;">Located on the slopes of the Paiva River in Bairros, Castelo de Paiva, in the heart of the Vinhos Verdes Demarcated Region, specifically in the Paiva Sub-region, where we produce red and white wines that reflect our commitment to quality from the cultivation of our vines to the winemaking process. Combining tradition and modernity to produce wines of character and distinction, using the most modern winemaking techniques.</h5>
+         	<h5 data-lang="pt">Valorizamos a sustentabilidade e a preservação do meio ambiente, utilizando práticas agrícolas responsáveis que garantem a saúde do solo e das vinhas.</h5>
+         	<h5 data-lang="en" style="display:none;">We value sustainability and environmental preservation, using responsible agricultural practices that ensure the health of the soil and vines.</h5>
+         	<h5 data-lang="pt">Os vinhos da Quinta da Lapa são comercializados com a marca "Notas da Vinha".</h5>
+         	<h5 data-lang="en" style="display:none;">The wines from Quinta da Lapa are marketed under the "Notas da Vinha" brand.</h5>
       </div>
 
 		</div>
@@ -212,65 +370,56 @@ responsáveis que garantem a saúde do solo e das vinhas.</h5></p>
 
       <div class="col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
          <div class="wow fadeInUp section-title" data-wow-delay="0.3s">
-            <h2>Os Nossos Vinhos</h2>
-			<h4>- Notas da Vinha -</h4>
+            <h2 data-lang="pt">Os Nossos Vinhos</h2>
+            <h2 data-lang="en" style="display:none;">Our Wines</h2>
+			<h4 data-lang="pt">- Notas da Vinha -</h4>
+			<h4 data-lang="en" style="display:none;">- Notas da Vinha -</h4>
             <h4></h4>
         </div>
       </div>
-
-      <div class="col-md-6 col-sm-12">
+	  
+	  
+	  
+	  <div class="col-md-6 col-sm-12">
         <div class="media wow fadeInUp" data-wow-delay="0.6s">
           <div class="media-object pull-left">
             <img src="images/Tinto.jpg" class="img-responsive" alt="Food Menu">
           </div>
           <div class="media-body">
-            <h3 class="media-heading">Vinho Tinto </h3>
-            <p><h5>Vinho proveniente principalmente da casta Vinhão, com uma cor vermelha intensa, aroma a
-frutos silvestres e vermelhos e taninos suaves. Fresco e intenso.</h5></p>
-<p><h6>Castas: Vinhão, Amaral (sin. Azal tinto), Espadeiro, Tinta Roriz e Touriga Nacional.</h6></p>
+            <h3 class="media-heading" data-lang="pt">Vinho Tinto </h3>
+            <h3 class="media-heading" data-lang="en" style="display:none;"> Red Wine</h3>
+            <h5 data-lang="pt">Vinho proveniente principalmente da casta Vinhão, com uma cor vermelha intensa, aroma a
+frutos silvestres e vermelhos e taninos suaves. Fresco e intenso.</h5>
+            <h5 data-lang="en" style="display:none;">Wine mainly from the Vinhão grape variety, with an intense red color, aroma of wild and red fruits and soft tannins. Fresh and intense. /h5>
+            <h6 data-lang="pt">Castas: Vinhão, Amaral (sin. Azal tinto), Espadeiro, Tinta Roriz e Touriga Nacional.</h6>
+            <h6 data-lang="en" style="display:none;"> Grape varieties: Vinhão, Amaral (aka Azal tinto), Espadeiro, Tinta Roriz and Touriga Nacional. </h6>
           </div>
         </div>
-		
-
-	
       </div>
-	  
-	  
 
       <div class="col-md-6 col-sm-12">
         <div class="media wow fadeInUp" data-wow-delay="1s">
           <div class="media-object pull-left">
             <img src="images/Branco.jpg" class="img-responsive" alt="Food Menu">
-			<!-- Tirar preço
-            <span class="menu-price">$32</span>
-			-->
           </div>
           <div class="media-body">
-            <h3 class="media-heading">Vinho Branco</h3>
-            <p><h5>Com sua acidez equilibrada e notas frutadas, apresenta-se leve e elegante, com um
+            <h3 class="media-heading" data-lang="pt">Vinho Branco</h3>
+            <h3 class="media-heading" data-lang="en" style="display:none;">White Wine</h3>
+            <h5 data-lang="pt">Com sua acidez equilibrada e notas frutadas, apresenta-se leve e elegante, com um
 final persistente e delicado. O vinho branco Notas da Vinha é a escolha perfeita para
-acompanhar momentos especiais.</h5></p>
-<p><h6>Castas: Arinto, Avesso, Loureiro, Trajadura, Alvarinho e “Perola”</h6></p>
+acompanhar momentos especiais.</h5>
+            <h5 data-lang="en" style="display:none;">With its balanced acidity and fruity notes, it presents itself light and elegant, with a persistent and delicate finish. The Notas da Vinha white wine is the perfect choice to accompany special moments.</h5>
+            <h6 data-lang="pt">Castas: Arinto, Avesso, Loureiro, Trajadura, Alvarinho e "Perola"</h6>
+            <h6 data-lang="en" style="display:none;">Grape varieties: Arinto, Avesso, Loureiro, Trajadura, Alvarinho and "Perola"</h6>
           </div>
         </div>
-
-
-		
       </div>
-	 
 
     </div>
   </div>
 </section>
 
-
-
-
-
-
 <!-- Gallery section -->
-
-
 <section id="gallery" class="parallax-section">
   <div class="container">
     <div class="row">
@@ -279,35 +428,31 @@ acompanhar momentos especiais.</h5></p>
 
        <div class="col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10">
          <div class="wow fadeInUp section-title" data-wow-delay="0.3s">
-            <h2>Contactos</h2>
-            <h4>- Notas da Vinha -</h4>
+            <h2 data-lang="pt">Contactos</h2>
+            <h2 data-lang="en" style="display:none;">Contacts</h2>
+            <h4 data-lang="pt">- Notas da Vinha -</h4>
+            <h4 data-lang="en" style="display:none;">- Notas da Vinha -</h4>
 			<p>&nbsp</p>
 			<p>&nbsp</p>
 			
-			
-			<p>Entre em contacto conosco para se informar de preços e encomendas</p> 
+			<p data-lang="pt">Entre em contacto conosco para se informar de preços e encomendas</p>
+			<p data-lang="en" style="display:none;">Contact us for information about prices and orders </p>
 			<p>&nbsp</p>
-			<p> Telemovel : (351) 96&nbsp5241280 </p>
-			<h4> (Chamada para rede móvel nacional) </h4>
-	  <p> <a href=mailto:notasdavinha@gmail.com><img src="images/email.png" width="10%"> </a><a href=https://www.facebook.com/notasdavinha> <img src="images/f_logo.png" width="10%"></a> <a href=https://goo.gl/maps/QPbP97BtRjcZ3Skp6><img src="images/g_logo.png" width="10%"> </a></p>
+			<p data-lang="pt"> Telemovel : (351) 96&nbsp5241280 </p>
+			<p data-lang="en" style="display:none;"> Mobile: (351) 96&nbsp5241280  </p>
+			<h4 data-lang="pt"> (Chamada para rede móvel nacional) </h4>
+			<h4 data-lang="en" style="display:none;"> (Call to national mobile network)  </h4>
+	        <p> <a href=mailto:notasdavinha@gmail.com><img src="images/email.png" width="10%"> </a><a href=https://www.facebook.com/notasdavinha> <img src="images/f_logo.png" width="10%"></a> <a href=https://goo.gl/maps/QPbP97BtRjcZ3Skp6><img src="images/g_logo.png" width="10%"> </a></p>
         </div>
       </div>
-	  
-
-        
-
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- Contact section -->
-
-
 <!-- Footer section -->
 <footer>
-
 
 <section id="contact" class="parallax-section">
 
@@ -317,7 +462,8 @@ acompanhar momentos especiais.</h5></p>
 
               <div class="wow fadeInUp col-md-4 col-sm-4" data-wow-delay="0.7s">
                 <h3>Notas da Vinha</h3>
-                <p style="color:white;">Produção de vinhos verdes na sub-região de Paiva</p>
+                <p style="color:white;" data-lang="pt">Produção de vinhos verdes na sub-região de Paiva</p>
+                <p style="color:white;" data-lang="en" style="display:none;">Production of green wines in the Paiva sub-region</p>
               </div>  
         
               <div class="wow fadeInUp col-md-4 col-sm-4" data-wow-delay="1.0s">
@@ -327,9 +473,12 @@ acompanhar momentos especiais.</h5></p>
               </div> 
         
               <div class="wow fadeInUp col-md-4 col-sm-4" data-wow-delay="1.3s">
-                <h3>Morada</h3>
-                <p style="color:white;">Quinta da Lapa - Rua da Lapa, 84</p>
-                <p style="color:white;">4550-069 Bairros, Castelo de Paiva </p>
+                <h3 data-lang="pt">Morada</h3>
+                <h3 data-lang="en" style="display:none;">Address</h3>
+                <p style="color:white;" data-lang="pt">Quinta da Lapa - Rua da Lapa, 84</p>
+                <p style="color:white;" data-lang="en" style="display:none;">Quinta da Lapa - Rua da Lapa, 84 </p>
+                <p style="color:white;" data-lang="pt">4550-069 Bairros, Castelo de Paiva </p>
+                <p style="color:white;" data-lang="en" style="display:none;">4550-069 Bairros, Castelo de Paiva </p>
               </div> 
 
 		</div>
@@ -354,6 +503,53 @@ acompanhar momentos especiais.</h5></p>
     </div>
   </div>
 </section>
+
+<!-- JavaScript for theme toggle and language switching -->
+<script>
+  // Theme toggle functionality
+  document.getElementById('theme-toggle').addEventListener('change', function() {
+    if (this.checked) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'enabled');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', null);
+    }
+  });
+  
+  // Language toggle functionality
+  document.getElementById('pt-btn').addEventListener('click', function() {
+    switchLanguage('pt');
+  });
+  
+  document.getElementById('en-btn').addEventListener('click', function() {
+    switchLanguage('en');
+  });
+  
+  function switchLanguage(lang) {
+    // Hide all language elements
+    const ptElements = document.querySelectorAll('[data-lang="pt"]');
+    const enElements = document.querySelectorAll('[data-lang="en"]');
+    
+    if (lang === 'pt') {
+      ptElements.forEach(el => el.style.display = '');
+      enElements.forEach(el => el.style.display = 'none');
+      localStorage.setItem('language', 'pt');
+    } else {
+      ptElements.forEach(el => el.style.display = 'none');
+      enElements.forEach(el => el.style.display = '');
+      localStorage.setItem('language', 'en');
+    }
+  }
+  
+  // Check saved language preference on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      switchLanguage(savedLanguage);
+    }
+  });
+</script>
 
 <!-- javscript js -->
 <script src="js/jquery.js"></script>
