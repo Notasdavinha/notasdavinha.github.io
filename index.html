@@ -8,8 +8,10 @@
 	<!-- Notrack teste -->
 <script>
   if (window.location.hostname === "notasdavinha.github.io") {
-    document.write('<meta name="robots" content="noindex, nofollow">');
-    window.location.replace("https://notasdavinha.pt");
+    let meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
   }
 </script>
 
